@@ -10,7 +10,7 @@
       "name": "sopia-extension-toolkit",
       "source": "./plugins/sopia-extension-toolkit",
       "description": "Creates and verifies SOPIA/ZIZI extensions using only the public extension-to-host contract.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "SOPIA",
         "url": "https://github.com/sopia-bot"

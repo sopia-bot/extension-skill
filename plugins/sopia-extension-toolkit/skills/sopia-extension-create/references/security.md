@@ -5,6 +5,7 @@
 ## 1. 공개 계약 경계
 
 - 코드가 `extension-contract.md`에 있는 facade만 사용한다.
+- Spoon 기능은 `sopia.user/live/play/store/feed` semantic facade만 사용하고 raw `sopia.api`를 만들지 않는다.
 - 내부 package, IPC, transport, protocol 타입을 import하거나 재현하지 않는다.
 - SOPIA/ZIZI first-party HTTP endpoint를 직접 호출하지 않는다.
 - 공개 계약에 포함되지 않은 privileged host capability를 생성하지 않는다.
@@ -16,8 +17,13 @@
 
 코드에서 실제 사용하는 기능과 manifest를 양방향으로 비교한다.
 
-- 이벤트 수신 ↔ `read:lives`
-- 채팅·좋아요 전송 ↔ `write:lives`
+- 사용자 조회 ↔ `read:users`
+- 팔로우·팬 공지 변경 ↔ `write:users`
+- 이벤트·방송/랭킹·투표/편지함 조회 ↔ `read:lives`
+- 채팅·좋아요·방송·투표/편지함 변경 ↔ `write:lives`
+- 인벤토리 조회 ↔ `read:store`
+- 피드 조회 ↔ `read:feeds`
+- 피드 변경 ↔ `write:feeds`
 - SQLite ↔ `sqlite`
 - 제3자 HTTP hostname ↔ 정확한 `axios` domain
 

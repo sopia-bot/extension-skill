@@ -66,7 +66,16 @@ if (!frontmatter) {
 }
 
 const variants = ['worker-only', 'vanilla-js', 'react-ts']
-const allowedScopes = new Set(['read:lives', 'write:lives', 'sqlite'])
+const allowedScopes = new Set([
+  'read:users',
+  'write:users',
+  'read:lives',
+  'write:lives',
+  'read:store',
+  'read:feeds',
+  'write:feeds',
+  'sqlite'
+])
 for (const variant of variants) {
   const directory = join(templates, variant)
   const manifestPath = join(directory, 'manifest.json')
@@ -88,8 +97,12 @@ for (const variant of variants) {
   }
   for (const path of walk(directory)) {
     if (!/\.(?:js|mjs|ts|tsx|html)$/.test(path)) continue
-    if (readFileSync(path, 'utf8').includes('crypto.randomUUID')) {
+    const source = readFileSync(path, 'utf8')
+    if (source.includes('crypto.randomUUID')) {
       fail(`${variant}: embedded browser runtime does not provide crypto.randomUUID`)
+    }
+    if (/\bsopia\.api\b/.test(source)) {
+      fail(`${variant}: use permission-checked semantic facades instead of raw sopia.api`)
     }
   }
 

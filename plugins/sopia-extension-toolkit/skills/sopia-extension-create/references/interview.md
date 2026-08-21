@@ -40,6 +40,22 @@
 
 이벤트 이름과 payload는 `extension-contract.md`에 있는 필드만 사용한다.
 
+### Spoon 기능
+
+이벤트 외에 필요한 semantic API 동작을 고른다.
+
+- 사용자 조회·검색·팔로워·팔로잉
+- 팔로우·언팔로우·팬 공지 변경
+- 방송 조회·인기/구독 방송·청취자·랭킹
+- 방송 정보 변경·차단·매니저 설정
+- 투표·편지함
+- 인벤토리 조회
+- 피드·댓글 조회
+- 피드 좋아요·댓글·포스트 작성
+- 없음
+
+확장에서는 `sopia.user/live/play/store/feed`를 사용한다. raw `sopia.api`는 존재하지 않는 선택지이므로 제안하지 않는다.
+
 ## C. 변형과 UI
 
 - `worker-only`: 가장 단순. ZIZI의 host-rendered 설정 폼 사용.
@@ -73,6 +89,15 @@ Renderer가 필요하면 화면을 고른다.
 |---|---|---|
 | 라이브 이벤트 수신 | `sopia.live.on/off` | `read:lives` |
 | 채팅·좋아요 전송 | `sopia.chat.send/sendLike` | `write:lives` |
+| 사용자·팔로워·채널 조회 | `sopia.user.getInfo/search/getFollowings/getFollowers/getCurrentLive/getMeta/getChannel` | `read:users` |
+| 팔로우·팬 공지 변경 | `sopia.user.follow/unfollow/saveFanNotice/deleteFanNotice` | `write:users` |
+| 방송·청취자·랭킹 조회 | `sopia.live.getInfo/getPopular/getSubscribed/getById/getListeners/get*Rank/getMemberProfile` | `read:lives` |
+| 방송 정보·차단·매니저 변경 | `sopia.live.uploadBackgroundImage/updateLiveInfo/blockUser/setManagers` | `write:lives` |
+| 투표·편지함 조회 | `sopia.play.get*` | `read:lives` |
+| 투표·편지함 변경 | `sopia.play.create*/vote*/close*/send*/set*/remove*` | `write:lives` |
+| 인벤토리 조회 | `sopia.store.getInventory` | `read:store` |
+| 피드·댓글 조회 | `sopia.feed.get*` | `read:feeds` |
+| 피드 좋아요·댓글·포스트 작성 | `sopia.feed.like*/unlike*/create*` | `write:feeds` |
 | SQLite | `sopia.sqlite.*` | `sqlite` |
 | 사용자가 명시한 제3자 HTTP | `axios.*` | 해당 정확한 도메인 |
 | `storage`, `sopia.web`, `sopia.secret` | 공개 기본 facade | 추가 선언 없음 |

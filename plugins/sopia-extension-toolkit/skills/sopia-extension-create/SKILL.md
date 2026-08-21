@@ -5,7 +5,7 @@ license: MIT
 compatibility: Designed for Claude Code and OpenAI Codex CLI/IDE. Requires Node.js, a writable workspace, and shell access. React templates require pnpm or npm.
 metadata:
   author: sopia-bot
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # SOPIA extension creator
@@ -21,6 +21,7 @@ metadata:
 - SOPIA/ZIZI가 운영하는 first-party HTTP endpoint를 직접 호출하지 않는다. ZIZI가 주입한 `sopia`, `storage`, `axios` facade만 사용한다.
 - `axios`는 사용자가 명시한 제3자 도메인에만 사용한다.
 - 참조 문서에 없는 메서드, 이벤트, payload 필드, permission을 추측하지 않는다.
+- Spoon API 기능은 `sopia.user`, `sopia.live`, `sopia.play`, `sopia.store`, `sopia.feed` semantic facade로 구현한다. 확장 런타임에 존재하지 않는 raw `sopia.api`를 생성하지 않는다.
 - 요청 기능에 공개 계약 밖의 기능이 필요하면 구현을 꾸미지 말고 지원 범위를 설명한 뒤 공개 계약 안의 대안을 제안한다.
 - 이 문서에 없는 privileged host capability는 이 공개 스킬의 지원 범위가 아니다.
 - 내장 Renderer 브라우저 런타임에는 `crypto.randomUUID()`가 없다. Renderer 코드에서 사용하거나 존재를 추측하지 않는다. 확장 `_id`는 scaffold 시 Node.js 스크립트로 생성한다.

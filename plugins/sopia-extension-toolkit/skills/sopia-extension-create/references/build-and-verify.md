@@ -85,10 +85,10 @@ npm run build
 모든 변형에서 다음을 확인한다.
 
 1. 코드에서 호출한 `sopia` API가 `extension-contract.md`에 존재한다.
-2. 이벤트 수신은 `read:lives`, 채팅 전송은 `write:lives`, SQLite는 `sqlite`를 선언한다.
+2. `sopia.user/live/play/store/feed/chat/sqlite` 사용과 manifest scope가 `manifest.md` 표에 맞는다.
 3. 사용하지 않는 permission이 없다.
 4. `axios` hostname은 manifest의 정확한 제3자 도메인과 일치한다.
-5. SOPIA/ZIZI first-party HTTP endpoint나 내부 모듈 import가 없다.
+5. raw `sopia.api`, SOPIA/ZIZI first-party HTTP endpoint, 내부 모듈 import가 없다.
 6. Renderer 입력은 Worker에서 다시 검증한다.
 7. 비밀값은 코드·manifest·Renderer·로그에 없다.
 8. manifest `_id`가 `^[A-Za-z0-9_-]{12}$`와 일치하고 기존 확장 업데이트에서 유지된다.

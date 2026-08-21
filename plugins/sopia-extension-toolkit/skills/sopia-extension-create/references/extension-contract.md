@@ -104,6 +104,189 @@ interface LiveRankPayload {
 
 이벤트 핸들러에서 optional 필드는 확인하고, 사용자 제공 문자열 길이를 제한한다. payload 전체를 Renderer나 외부 서비스로 전달하지 않는다.
 
+## Spoon semantic API facades
+
+확장 Worker에는 raw Spoon client나 `sopia.api`가 주입되지 않는다. `sopia.api.*`를 생성하지 않는다. Spoon 기능은 ZIZI가 제공하는 permission-checked semantic facade를 사용한다.
+
+```ts
+sopia.user
+sopia.live
+sopia.play
+sopia.store
+sopia.feed
+```
+
+각 facade는 필요한 scope가 manifest에 있을 때만 존재한다. optional chaining으로 숨기지 말고, 사용 기능에 맞는 permission을 선언한 뒤 API 부재와 호출 실패를 처리한다.
+
+공통 페이지 응답:
+
+```ts
+interface SopiaPage<T> {
+  statusCode: number
+  detail: string
+  next: string | null
+  previous: string | null
+  results: T[]
+}
+
+interface SopiaUserProfile {
+  id: number
+  nickname: string
+  tag: string
+  description: string
+  profileUrl: string
+  profileCoverUrl: string
+  followerCount: number
+  followingCount: number
+  isVip: boolean
+  isVerified: boolean
+  isDj: boolean
+}
+```
+
+### User facade
+
+조회는 `read:users`, 변경은 `write:users`가 필요하다.
+
+```ts
+sopia.user?.getInfo(userId: number): Promise<SopiaUserProfile | null>
+sopia.user?.search(keyword: string, limit?: number): Promise<SopiaPage<SopiaUserProfile>>
+sopia.user?.getFollowings(userId: number, nickname?: string): Promise<SopiaPage<SopiaUserProfile>>
+sopia.user?.getFollowers(userId: number, nickname?: string): Promise<SopiaPage<SopiaUserProfile>>
+sopia.user?.getCurrentLive(userId: number): Promise<Record<string, unknown> | null>
+sopia.user?.getMeta(userIds: number[], includeCurrentLive?: boolean): Promise<Record<string, unknown>[]>
+sopia.user?.getChannel(userId: number): Promise<Record<string, unknown> | null>
+sopia.user?.follow(userId: number): Promise<void>
+sopia.user?.unfollow(userId: number): Promise<void>
+sopia.user?.saveFanNotice(notice: string, sendNotification?: boolean): Promise<string>
+sopia.user?.deleteFanNotice(): Promise<string>
+```
+
+사용자 ID는 양의 정수, 검색어는 최대 100자, 팬 공지는 최대 1,000자로 제한한다. `getMeta`는 필요한 ID만 한정된 수로 요청한다.
+
+### Live facade
+
+조회와 이벤트는 `read:lives`, 변경은 `write:lives`가 필요하다.
+
+```ts
+interface LiveInfo {
+  id: number
+  title: string
+  memberCount: number
+  likeCount: number
+  spoonCount: number
+  isLive: boolean
+  streamStatus: string
+  managerIds: number[]
+  dj: {
+    id: number
+    nickname: string
+    profileUrl?: string
+  }
+}
+
+interface SopiaPageOptions {
+  pageSize?: number
+  page?: number
+}
+
+interface SopiaPopularLiveOptions extends SopiaPageOptions {
+  category?: string
+}
+
+sopia.live?.getInfo(): Promise<LiveInfo | null>
+sopia.live?.getBanners(): Promise<SopiaPage<Record<string, unknown>>>
+sopia.live?.getPopular(options?: SopiaPopularLiveOptions): Promise<SopiaPage<Record<string, unknown>>>
+sopia.live?.getSubscribed(options?: SopiaPageOptions): Promise<SopiaPage<Record<string, unknown>>>
+sopia.live?.getById(liveId: number): Promise<Record<string, unknown> | null>
+sopia.live?.checkUser(userId: number): Promise<Record<string, unknown> | null>
+sopia.live?.getListeners(next?: string): Promise<SopiaPage<Record<string, unknown>>>
+sopia.live?.getSponsorRank(next?: string): Promise<SopiaPage<Record<string, unknown>>>
+sopia.live?.getCumulativeRank(next?: string): Promise<SopiaPage<Record<string, unknown>>>
+sopia.live?.getLikeRank(next?: string): Promise<SopiaPage<Record<string, unknown>>>
+sopia.live?.getMemberProfile(userId: number): Promise<Record<string, unknown> | null>
+sopia.live?.uploadBackgroundImage(input: {
+  base64Data: string
+  filename: string
+}): Promise<{ imageKey: string }>
+sopia.live?.updateLiveInfo(input: Record<string, unknown>): Promise<void>
+sopia.live?.blockUser(userId: number): Promise<SopiaPage<SopiaUserProfile>>
+sopia.live?.setManagers(userIds: number[]): Promise<SopiaPage<SopiaUserProfile>>
+```
+
+페이지 크기는 작게 제한한다. `next`는 직전 응답에서 받은 값만 전달하고 사용자 입력으로 만들지 않는다. 방송 변경·차단·매니저 설정은 DJ 전용 동작으로 취급하고 Renderer에서 명시적 확인을 받는다.
+
+### Poll and mailbox facade
+
+조회는 `read:lives`, 생성·투표·변경은 `write:lives`가 필요하다.
+
+```ts
+sopia.play?.getStatus(): Promise<Record<string, unknown> | null>
+sopia.play?.createPoll(title: string, items: string[]): Promise<Record<string, unknown> | null>
+sopia.play?.votePoll(pollId: number, itemId: number): Promise<Record<string, unknown> | null>
+sopia.play?.getPoll(pollId: number): Promise<Record<string, unknown> | null>
+sopia.play?.closePoll(pollId: number): Promise<Record<string, unknown> | null>
+sopia.play?.createMailbox(title: string): Promise<Record<string, unknown> | null>
+sopia.play?.sendMailbox(
+  mailboxId: number,
+  message: string,
+  isAnonymous?: boolean
+): Promise<Record<string, unknown> | null>
+sopia.play?.getMailbox(mailboxId: number): Promise<Record<string, unknown> | null>
+sopia.play?.getMailboxMessages(mailboxId: number): Promise<SopiaPage<Record<string, unknown>>>
+sopia.play?.getCurrentMailbox(mailboxId: number): Promise<Record<string, unknown> | null>
+sopia.play?.setCurrentMailbox(
+  mailboxId: number,
+  messageId: number,
+  isPublished: boolean
+): Promise<Record<string, unknown> | null>
+sopia.play?.removeMailboxMessage(
+  mailboxId: number,
+  messageId: number
+): Promise<Record<string, unknown> | null>
+sopia.play?.closeMailbox(mailboxId: number): Promise<Record<string, unknown> | null>
+```
+
+제목·항목·메시지의 빈 값, 개수, 길이를 Worker에서 검증한다.
+
+### Store facade
+
+`read:store`가 필요하다.
+
+```ts
+sopia.store?.getInventory(
+  userType: 'DJ' | 'LISTENER',
+  permanenceType: string,
+  envelope?: boolean
+): Promise<SopiaPage<Record<string, unknown>>>
+```
+
+### Feed facade
+
+조회는 `read:feeds`, 좋아요·댓글·포스트 작성은 `write:feeds`가 필요하다.
+
+```ts
+interface SopiaCreatePostInput {
+  type: 'DJ' | 'FAN'
+  targetUserId: number
+  contents: string
+  visibleOption?: 'ALL' | 'ONLYME' | 'ONLYFAN'
+}
+
+sopia.feed?.getFeed(userId: number, options?: Record<string, unknown>): Promise<SopiaPage<Record<string, unknown>>>
+sopia.feed?.getFanFeed(userId: number, options?: Record<string, unknown>): Promise<SopiaPage<Record<string, unknown>>>
+sopia.feed?.getPost(postId: number): Promise<Record<string, unknown> | null>
+sopia.feed?.getComments(postId: number): Promise<Record<string, unknown>[]>
+sopia.feed?.getReplies(postId: number, commentId: number): Promise<Record<string, unknown>[]>
+sopia.feed?.likePost(postId: number): Promise<void>
+sopia.feed?.unlikePost(postId: number): Promise<void>
+sopia.feed?.createComment(postId: number, contents: string): Promise<void>
+sopia.feed?.createReply(postId: number, commentId: number, contents: string): Promise<void>
+sopia.feed?.createPost(input: SopiaCreatePostInput): Promise<Record<string, unknown> | null>
+```
+
+피드 작성 내용은 빈 값과 길이를 검증하고, 사용자가 요청한 기능에서 실제 필요한 메서드만 사용한다.
+
 ## Chat
 
 `write:lives` 필요:

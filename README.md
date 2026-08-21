@@ -27,6 +27,7 @@ Claude Code와 OpenAI Codex에서 새 SOPIA/ZIZI 확장앱을 만드는 공개 A
 - 라이브 이벤트 수신
 - 채팅·좋아요 전송
 - Worker와 Renderer 통신
+- 사용자·방송·투표·편지함·인벤토리·피드 semantic facade
 - extension storage와 SQLite
 - secret 조회
 - 사용자가 명시한 제3자 HTTP 호출

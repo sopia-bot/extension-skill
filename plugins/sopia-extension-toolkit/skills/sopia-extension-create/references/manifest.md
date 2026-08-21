@@ -119,7 +119,7 @@ React 빌드 결과:
 
 이 공개 스킬이 생성할 수 있는 permission은 다음뿐이다.
 
-### Live facade
+### Spoon semantic facade
 
 ```json
 {
@@ -142,8 +142,13 @@ React 빌드 결과:
 
 | scope | 사용 조건 |
 |---|---|
-| `read:lives` | `sopia.live.on/off`으로 공개 이벤트를 수신할 때 |
-| `write:lives` | `sopia.chat.send/sendLike`를 사용할 때 |
+| `read:users` | `sopia.user`의 조회 메서드를 사용할 때 |
+| `write:users` | `sopia.user`의 팔로우·팬 공지 변경 메서드를 사용할 때 |
+| `read:lives` | 라이브 이벤트, 방송·랭킹 조회, 투표·편지함 조회를 사용할 때 |
+| `write:lives` | 채팅·좋아요, 방송 변경, 투표·편지함 변경을 사용할 때 |
+| `read:store` | `sopia.store.getInventory`를 사용할 때 |
+| `read:feeds` | `sopia.feed`의 조회 메서드를 사용할 때 |
+| `write:feeds` | `sopia.feed`의 좋아요·댓글·포스트 작성 메서드를 사용할 때 |
 | `sqlite` | `sopia.sqlite.*`를 사용할 때 |
 
 `storage`, `sopia.web`, `sopia.secret`에는 추가 선언을 만들지 않는다.
@@ -182,9 +187,12 @@ React 빌드 결과:
 
 ## Permission derivation
 
-1. 이벤트 목록에 하나라도 있으면 `read:lives`.
-2. 채팅 또는 좋아요를 보내면 `write:lives`.
-3. SQLite 메서드를 쓰면 `sqlite`.
-4. 제3자 HTTP를 호출하면 실제 고정 hostname별 `axios` 항목.
-5. 코드에서 제거한 기능의 permission도 제거.
-6. 이유는 사용자가 이해할 수 있는 기능 단위 문장으로 작성.
+1. `sopia.user` 조회는 `read:users`, 팔로우·팬 공지 변경은 `write:users`.
+2. 라이브 이벤트·방송/랭킹 조회·투표/편지함 조회는 `read:lives`.
+3. 채팅·좋아요·방송 변경·투표/편지함 변경은 `write:lives`.
+4. 인벤토리 조회는 `read:store`.
+5. 피드 조회는 `read:feeds`, 피드 좋아요·댓글·포스트 작성은 `write:feeds`.
+6. SQLite 메서드를 쓰면 `sqlite`.
+7. 제3자 HTTP를 호출하면 실제 고정 hostname별 `axios` 항목.
+8. 코드에서 제거한 기능의 permission도 제거.
+9. 이유는 사용자가 이해할 수 있는 기능 단위 문장으로 작성.
