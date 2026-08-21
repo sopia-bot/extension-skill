@@ -1,0 +1,17 @@
+{
+  "name": "sopia-extension-toolkit",
+  "description": "Creates SOPIA/ZIZI extensions through a confirmed specification, safe public contracts, build verification, and security review.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SOPIA"
+  },
+  "homepage": "https://github.com/sopia-bot/extension-skill",
+  "repository": "https://github.com/sopia-bot/extension-skill",
+  "license": "MIT",
+  "keywords": [
+    "sopia",
+    "zizi",
+    "extension",
+    "scaffolding"
+  ]
+}

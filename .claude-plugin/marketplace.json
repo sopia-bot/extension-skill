@@ -1,0 +1,35 @@
+{
+  "name": "sopia-tools",
+  "owner": {
+    "name": "SOPIA",
+    "url": "https://github.com/sopia-bot"
+  },
+  "description": "Public developer tools for SOPIA/ZIZI extensions.",
+  "plugins": [
+    {
+      "name": "sopia-extension-toolkit",
+      "source": "./plugins/sopia-extension-toolkit",
+      "description": "Creates and verifies SOPIA/ZIZI extensions using only the public extension-to-host contract.",
+      "version": "1.0.0",
+      "author": {
+        "name": "SOPIA",
+        "url": "https://github.com/sopia-bot"
+      },
+      "homepage": "https://github.com/sopia-bot/extension-skill",
+      "repository": "https://github.com/sopia-bot/extension-skill",
+      "license": "MIT",
+      "keywords": [
+        "sopia",
+        "zizi",
+        "extension",
+        "scaffolding"
+      ],
+      "category": "development",
+      "tags": [
+        "extension",
+        "security",
+        "templates"
+      ]
+    }
+  ]
+}

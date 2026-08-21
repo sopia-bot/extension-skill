@@ -1,0 +1,35 @@
+{
+  "name": "sopia-extension-toolkit",
+  "version": "1.0.0",
+  "description": "Creates SOPIA/ZIZI extensions through a confirmed specification, safe public contracts, build verification, and security review.",
+  "author": {
+    "name": "SOPIA",
+    "url": "https://github.com/sopia-bot"
+  },
+  "homepage": "https://github.com/sopia-bot/extension-skill",
+  "repository": "https://github.com/sopia-bot/extension-skill",
+  "license": "MIT",
+  "keywords": [
+    "sopia",
+    "zizi",
+    "extension",
+    "scaffolding"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SOPIA Extension Toolkit",
+    "shortDescription": "Create and verify SOPIA/ZIZI extensions",
+    "longDescription": "Runs a deep interview, confirms the specification, scaffolds a public-contract-only extension, builds it, verifies artifacts, and performs a security review.",
+    "developerName": "SOPIA",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/sopia-bot/extension-skill",
+    "defaultPrompt": [
+      "Create a SOPIA/ZIZI extension from my feature request."
+    ],
+    "brandColor": "#F31260"
+  }
+}

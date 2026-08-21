@@ -1,0 +1,17 @@
+{
+  "name": "{{EXT_SLUG}}",
+  "version": "{{VERSION}}",
+  "private": true,
+  "description": "{{DESCRIPTION}}",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run build:worker && npm run build:renderer",
+    "build:worker": "esbuild src/index.ts --bundle --platform=node --target=node18 --outfile=dist/index.js",
+    "build:renderer": "npm --prefix renderer run build",
+    "typecheck": "tsc --noEmit && npm --prefix renderer run typecheck"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.9.3"
+  }
+}

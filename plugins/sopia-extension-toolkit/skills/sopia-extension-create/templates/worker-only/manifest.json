@@ -1,0 +1,49 @@
+{
+  "name": "{{EXT_NAME}}",
+  "version": "{{VERSION}}",
+  "description": "{{DESCRIPTION}}",
+  "main": "index.js",
+  "author": "{{AUTHOR}}",
+  "schema": {
+    "settings": {
+      "commandPrefix": {
+        "type": "string",
+        "title": "명령어 접두사",
+        "description": "채팅 명령어 앞에 붙는 문자열입니다.",
+        "default": "!"
+      },
+      "enableGreeter": {
+        "type": "boolean",
+        "title": "입장 인사 활성화",
+        "description": "청취자가 입장하면 환영 메시지를 보냅니다.",
+        "default": false
+      },
+      "greetMessage": {
+        "type": "string",
+        "title": "환영 메시지",
+        "description": "{nickname}은 입장한 청취자의 닉네임으로 바뀝니다.",
+        "default": "환영합니다, {nickname}님!"
+      }
+    },
+    "stats": {
+      "pingCount": {
+        "type": "number",
+        "title": "Ping 횟수",
+        "description": "!ping 명령이 정상 처리된 누적 횟수입니다."
+      }
+    }
+  },
+  "permissions": {
+    "sopia": [
+      {
+        "scope": "read:lives",
+        "reason": "채팅과 입장 이벤트를 수신합니다."
+      },
+      {
+        "scope": "write:lives",
+        "reason": "명령어 응답과 입장 인사를 채팅으로 전송합니다."
+      }
+    ]
+  },
+  "_id": "{{EXT_ID}}"
+}

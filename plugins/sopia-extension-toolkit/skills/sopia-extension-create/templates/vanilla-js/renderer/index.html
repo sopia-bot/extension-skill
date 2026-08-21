@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{EXT_NAME}} 설정</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>{{EXT_NAME}}</h1>
+      <p class="subtitle">확장앱 설정</p>
+    </header>
+
+    <section class="card" aria-labelledby="settings-title">
+      <h2 id="settings-title">설정</h2>
+
+      <div class="form-group">
+        <label class="checkbox-label" for="enableWelcome">
+          <input type="checkbox" id="enableWelcome">
+          <span>입장 인사 활성화</span>
+        </label>
+        <p class="hint">청취자가 입장하면 환영 메시지를 보냅니다.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="welcomeMessage">환영 메시지</label>
+        <input
+          type="text"
+          id="welcomeMessage"
+          maxlength="200"
+          placeholder="환영합니다, {nickname}님!"
+        >
+        <p class="hint"><code>{nickname}</code>은 입장한 청취자의 닉네임으로 바뀝니다.</p>
+      </div>
+
+      <button id="saveSettings" class="btn btn-primary" type="button">설정 저장</button>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

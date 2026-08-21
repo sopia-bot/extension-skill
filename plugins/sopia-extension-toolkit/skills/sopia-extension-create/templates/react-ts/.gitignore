@@ -1,0 +1,9 @@
+node_modules/
+renderer/node_modules/
+dist/
+renderer/dist/
+secret.json
+storage.json
+storage.db
+*.log
+*.tsbuildinfo
